@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Automation ROI Calculator | Corva Prime</title>
+  <meta name="description" content="Calculate your organization's exact monthly time saved and annual capital reclaimed with Corva Prime's intelligent process automation calculator.">
+  <!-- Brand Logo Favicon -->
+  <link rel="icon" type="image/png" href="assets/corva-prime-logo.png">
+  <link rel="apple-touch-icon" href="assets/corva-prime-logo.png">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Preloader & Logo Loading Automation -->
+  <div id="preloader" class="preloader-overlay">
+    <div class="preloader-content">
+      <img src="assets/corva-prime-logo.png" alt="Corva Prime Loading..." class="preloader-logo" width="220" height="54">
+      <div class="preloader-bar">
+        <div class="preloader-progress" id="preloader-progress"></div>
+      </div>
+      <div class="preloader-text">INITIALIZING ECOSYSTEM...</div>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="container nav-container">
+        <a href="/" class="brand-logo-link">
+          <img src="assets/corva-prime-logo.png" alt="Corva Prime Logo" class="brand-logo-img" width="210" height="52" loading="eager">
+        </a>
+        <nav>
+          <ul class="nav-links" id="nav-links">
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="digital-growth" class="nav-link">Digital Growth</a></li>
+            <li><a href="intelligent-automation" class="nav-link">Automation</a></li>
+            <li><a href="powerful-websites" class="nav-link">Websites</a></li>
+            <li><a href="founder-message" class="nav-link">Founder</a></li>
+            <li><a href="roi-calculator" class="nav-link active">ROI Calculator</a></li>
+            <li><a href="case-studies" class="nav-link">Case Studies</a></li>
+            <li><a href="faq" class="nav-link">FAQ</a></li>
+            <li><a href="free-audit" class="nav-link">Free Audit</a></li>
+            <li><a href="contact" class="btn btn-primary" style="padding: 0.55rem 1.25rem; font-size: 0.88rem;">Contact Us</a></li>
+          </ul>
+        </nav>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Menu">☰</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Page Banner -->
+      <section class="page-banner">
+        <div class="container">
+          <div class="badge">Interactive Financial Modeling</div>
+          <h1 class="page-title text-gradient">Quantify Your Automation Return On Investment</h1>
+          <p class="page-subtitle">Adjust team metrics below to dynamically project monthly time saved and annual operational capital reclaimed.</p>
+        </div>
+      </section>
+
+      <!-- Calculator Card -->
+      <section class="roi-section" style="padding-top: 0;">
+        <div class="container">
+          <div class="glass-card roi-container">
+            <div class="roi-inputs">
+              <div class="input-group">
+                <div class="input-label-row">
+                  <label for="calc-team-size" class="form-label">Team Members Performing Manual Tasks:</label>
+                  <span class="input-value-badge" id="val-team-size">15</span>
+                </div>
+                <input type="range" id="calc-team-size" class="range-slider" min="1" max="100" value="15">
+              </div>
+
+              <div class="input-group">
+                <div class="input-label-row">
+                  <label for="calc-hourly-rate" class="form-label">Blended Hourly Cost per Member ($):</label>
+                  <span class="input-value-badge" id="val-hourly-rate">$65/hr</span>
+                </div>
+                <input type="range" id="calc-hourly-rate" class="range-slider" min="20" max="250" value="65" step="5">
+              </div>
+
+              <div class="input-group">
+                <div class="input-label-row">
+                  <label for="calc-manual-hours" class="form-label">Manual / Repetitive Hours per Member Weekly:</label>
+                  <span class="input-value-badge" id="val-manual-hours">12 hrs/wk</span>
+                </div>
+                <input type="range" id="calc-manual-hours" class="range-slider" min="2" max="30" value="12">
+              </div>
+            </div>
+
+            <!-- Calculation Output Box -->
+            <div class="glass-card roi-results-card">
+              <div>
+                <div class="savings-label">Estimated Monthly Time Saved</div>
+                <div class="savings-amount" id="res-hours-saved">507 hrs/mo</div>
+              </div>
+
+              <div style="width: 100%; height: 1px; background: rgba(255,255,255,0.1);"></div>
+
+              <div>
+                <div class="savings-label">Estimated Annual Capital Reclaimed</div>
+                <div class="savings-amount" id="res-annual-savings" style="font-size: clamp(2.5rem, 3.5vw, 3.25rem); color: var(--text-primary);">$395,460</div>
+              </div>
+
+              <a href="free-audit" class="btn btn-primary" style="width: 100%;">Claim Your Free Audit ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <a href="/" class="brand-logo-link">
+              <img src="assets/corva-prime-logo.png" alt="Corva Prime Logo" class="brand-logo-img" width="180" height="44" loading="lazy">
+            </a>
+            <p class="footer-brand-desc">Digital Growth, Intelligent Automation &amp; Powerful Websites.</p>
+          </div>
+          <div>
+            <h4 class="footer-title">Pillars</h4>
+            <ul class="footer-links">
+              <li><a href="digital-growth" class="footer-link">Digital Growth</a></li>
+              <li><a href="intelligent-automation" class="footer-link">Automation</a></li>
+              <li><a href="powerful-websites" class="footer-link">Websites</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="footer-title">Company</h4>
+            <ul class="footer-links">
+              <li><a href="founder-message" class="footer-link">Founder's Message</a></li>
+              <li><a href="case-studies" class="footer-link">Case Studies</a></li>
+              <li><a href="faq" class="footer-link">FAQ</a></li>
+              <li><a href="free-audit" class="footer-link">Free Audit Application</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="footer-title">Direct Contact</h4>
+            <ul class="footer-links">
+              <li><a href="mailto:info@corvaprime.com" class="footer-link">✉️ info@corvaprime.com</a></li>
+              <li><a href="https://wa.me/923394091688" target="_blank" rel="noopener" class="footer-link">🇵🇰 +92 339 4091688</a></li>
+              <li><a href="https://wa.me/447575497312" target="_blank" rel="noopener" class="footer-link">🇬🇧 +44 7575 497312</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div>© 2026 Corva Prime. Founder: Muneeb Ahmad Butt. All rights reserved.</div>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
