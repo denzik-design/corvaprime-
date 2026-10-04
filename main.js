@@ -3,6 +3,7 @@
    ========================================== */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initThemeToggle();
   initPreloader();
   initBackgroundCanvas();
   initHeaderScroll();
@@ -553,5 +554,38 @@ function initFloatingContactWidget() {
       // Direct Mailto Dispatch
       window.location.href = 'mailto:info@corvaprime.com';
     });
+  }
+}
+
+/* ------------------------------------------
+   12. Dark / Light Theme Toggle Engine
+   ------------------------------------------ */
+function initThemeToggle() {
+  const toggleBtn = document.getElementById('theme-toggle');
+  const themeIcon = toggleBtn ? toggleBtn.querySelector('.theme-icon') : null;
+
+  // Restore saved theme or default to light
+  const savedTheme = localStorage.getItem('corva-theme') || 'light';
+  applyTheme(savedTheme);
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(newTheme);
+      localStorage.setItem('corva-theme', newTheme);
+    });
+  }
+
+  function applyTheme(theme) {
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      if (themeIcon) themeIcon.textContent = '☀️';
+      if (toggleBtn) toggleBtn.setAttribute('aria-label', 'Switch to light mode');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      if (themeIcon) themeIcon.textContent = '🌙';
+      if (toggleBtn) toggleBtn.setAttribute('aria-label', 'Switch to dark mode');
+    }
   }
 }

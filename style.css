@@ -970,3 +970,101 @@ body {
     right: 1.25rem;
   }
 }
+
+/* ==========================================
+   HEADER DARK / LIGHT MODE TOGGLE & DARK THEME
+   ========================================== */
+.theme-toggle-btn {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1.5px solid var(--gold-primary);
+  color: var(--text-primary);
+  font-size: 1.15rem;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-normal);
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle-btn:hover {
+  transform: rotate(20deg) scale(1.08);
+  background: var(--gold-primary);
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+[data-theme="dark"] {
+  --bg-dark: #0b0f19;
+  --bg-deep: #111827;
+  --bg-card: rgba(31, 41, 55, 0.85);
+  --bg-card-hover: rgba(37, 49, 67, 0.95);
+  --border-card: rgba(75, 85, 99, 0.6);
+  --border-glow: rgba(56, 189, 248, 0.5);
+
+  --text-primary: #ffffff;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  
+  --blue-royal: #38bdf8;
+  --gold-primary: #f59e0b;
+  --gold-dark: #fbbf24;
+}
+
+[data-theme="dark"] .header {
+  background: rgba(11, 15, 25, 0.88);
+  border-bottom-color: rgba(75, 85, 99, 0.4);
+}
+
+[data-theme="dark"] .header.scrolled {
+  background: rgba(11, 15, 25, 0.96);
+  border-bottom-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .nav-link {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .nav-link:hover, [data-theme="dark"] .nav-link.active {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .preloader-overlay,
+[data-theme="dark"] .modal-box,
+[data-theme="dark"] .wa-popover-card {
+  background: #111827;
+  color: #ffffff;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .page-banner {
+  background: linear-gradient(180deg, #0b0f19 0%, #111827 100%);
+}
+
+[data-theme="dark"] .footer {
+  background: #070a12;
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-textarea,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .faq-search-input,
+[data-theme="dark"] .faq-item,
+[data-theme="dark"] .tab-btn {
+  background: rgba(31, 41, 55, 0.8);
+  border-color: rgba(75, 85, 99, 0.6);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .wa-option-card {
+  background: #1f2937;
+  border-color: #374151;
+  color: #ffffff;
+}
