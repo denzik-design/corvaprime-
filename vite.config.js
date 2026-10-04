@@ -22,7 +22,8 @@ export default defineConfig({
         caseStudies: resolve(__dirname, 'case-studies.html'),
         faq: resolve(__dirname, 'faq.html'),
         freeAudit: resolve(__dirname, 'free-audit.html'),
-        contact: resolve(__dirname, 'contact.html')
+        contact: resolve(__dirname, 'contact.html'),
+        privacy: resolve(__dirname, 'privacy.html')
       }
     }
   }

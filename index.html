@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Corva Prime | Digital Growth, Intelligent Automation &amp; Powerful Websites</title>
   
+  <!-- Preconnect to Font Domains for Core Web Vitals LCP Optimization -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="canonical" href="https://corvaprime.com/">
+
   <!-- SEO & Social Graph Meta Tags -->
   <meta name="description" content="Corva Prime engineers high-converting web architectures, autonomous AI workflows, and data-driven digital growth strategies for scaling enterprises.">
   <meta name="keywords" content="Digital Growth, Intelligent Automation, Web Development, Custom AI Agents, Enterprise Automation, Performance Marketing, Corva Prime">
@@ -75,10 +81,10 @@
 
   <canvas id="bg-canvas"></canvas>
 
-  <!-- Preloader & Logo Loading Automation -->
+  <!-- Preloader & Unmounting Automation Overlay -->
   <div id="preloader" class="preloader-overlay">
     <div class="preloader-content">
-      <img src="assets/corva-prime-logo.png" alt="Corva Prime Loading..." class="preloader-logo" width="220" height="54">
+      <img src="assets/corva-prime-logo.png" alt="Corva Prime Loading..." class="preloader-logo" width="220" height="54" fetchpriority="high">
       <div class="preloader-bar">
         <div class="preloader-progress" id="preloader-progress"></div>
       </div>
@@ -97,7 +103,7 @@
                class="brand-logo-img" 
                width="210" 
                height="52" 
-               loading="eager">
+               fetchpriority="high">
         </a>
 
         <nav aria-label="Main Navigation">
@@ -115,7 +121,7 @@
           </ul>
         </nav>
 
-        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" aria-expanded="false">
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
           ☰
         </button>
       </div>
@@ -211,11 +217,12 @@
           <div class="glass-card founder-card">
             <div class="founder-img-wrapper">
               <img src="assets/founder-portrait.png" 
-                   alt="Founder of Corva Prime" 
+                   alt="Muneeb Ahmad Butt - Founder of Corva Prime" 
                    class="founder-img" 
                    width="800" 
                    height="450" 
-                   loading="lazy">
+                   loading="lazy" 
+                   decoding="async">
             </div>
             <div class="founder-content">
               <div class="badge">Leadership &amp; Vision</div>
@@ -260,7 +267,8 @@
                    class="brand-logo-img" 
                    width="180" 
                    height="44" 
-                   loading="lazy">
+                   loading="lazy"
+                   decoding="async">
             </a>
             <p class="footer-brand-desc">
               Engineering high-converting digital platforms, autonomous AI workflows, and data-driven growth architectures for scaling organizations.
@@ -302,7 +310,7 @@
           <div>© 2026 Corva Prime. Founder: Muneeb Ahmad Butt. All rights reserved.</div>
           <div style="display: flex; gap: 1.5rem;">
             <a href="contact" class="footer-link">Contact Support</a>
-            <a href="#" class="footer-link">Privacy Policy</a>
+            <a href="privacy" class="footer-link">Privacy Policy</a>
           </div>
         </div>
       </div>

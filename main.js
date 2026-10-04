@@ -13,39 +13,60 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initAuditForm();
   initSmoothScroll();
+  initImageFallbacks();
 });
 
 /* ------------------------------------------
-   0. Preloader & Logo Loading Automation
+   0. Preloader & Unmounting Automation
    ------------------------------------------ */
 function initPreloader() {
   const preloader = document.getElementById('preloader');
   const progress = document.getElementById('preloader-progress');
   if (!preloader) return;
 
-  let width = 0;
-  const interval = setInterval(() => {
-    width += Math.floor(Math.random() * 25) + 15;
-    if (progress) progress.style.width = `${Math.min(width, 100)}%`;
+  let currentWidth = 0;
+  let targetWidth = 0;
+  let animationFrameId;
 
-    if (width >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        preloader.classList.add('fade-out');
-      }, 250);
+  function updateProgress() {
+    if (targetWidth < 100) {
+      targetWidth += Math.random() * 20 + 10;
+      if (targetWidth > 90) targetWidth = 90;
     }
-  }, 60);
+    
+    currentWidth += (targetWidth - currentWidth) * 0.2;
+    if (progress) progress.style.width = `${Math.min(currentWidth, 100)}%`;
+
+    if (currentWidth < 99 || targetWidth < 100) {
+      animationFrameId = requestAnimationFrame(updateProgress);
+    } else {
+      if (progress) progress.style.width = '100%';
+      dismissPreloader();
+    }
+  }
+
+  function dismissPreloader() {
+    cancelAnimationFrame(animationFrameId);
+    preloader.classList.add('fade-out');
+    setTimeout(() => {
+      preloader.classList.add('unmounted');
+    }, 500);
+  }
+
+  animationFrameId = requestAnimationFrame(updateProgress);
 
   window.addEventListener('load', () => {
-    if (progress) progress.style.width = '100%';
-    setTimeout(() => {
-      preloader.classList.add('fade-out');
-    }, 200);
+    targetWidth = 100;
   });
+
+  // Safety fallback after 1.5 seconds max
+  setTimeout(() => {
+    targetWidth = 100;
+  }, 1200);
 }
 
 /* ------------------------------------------
-   1. Futuristic Background Particle Canvas
+   1. Particle Background Canvas
    ------------------------------------------ */
 function initBackgroundCanvas() {
   const canvas = document.getElementById('bg-canvas');
@@ -61,15 +82,15 @@ function initBackgroundCanvas() {
   });
 
   const particles = [];
-  const particleCount = Math.min(Math.floor(width / 18), 75);
+  const particleCount = Math.min(Math.floor(width / 22), 60);
 
   for (let i = 0; i < particleCount; i++) {
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
-      radius: Math.random() * 2 + 0.5,
-      vx: (Math.random() - 0.5) * 0.4,
-      vy: (Math.random() - 0.5) * 0.4,
+      radius: Math.random() * 1.8 + 0.5,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
       alpha: Math.random() * 0.5 + 0.2
     });
   }
@@ -99,9 +120,9 @@ function initBackgroundCanvas() {
         const dy = particles[i].y - particles[j].y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < 140) {
+        if (dist < 130) {
           ctx.beginPath();
-          ctx.strokeStyle = `rgba(6, 182, 212, ${0.15 * (1 - dist / 140)})`;
+          ctx.strokeStyle = `rgba(6, 182, 212, ${0.12 * (1 - dist / 130)})`;
           ctx.lineWidth = 0.8;
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
@@ -138,17 +159,24 @@ function initHeaderScroll() {
   const header = document.querySelector('.header');
   if (!header) return;
 
+  let ticking = false;
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 30) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        if (window.scrollY > 20) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+        ticking = false;
+      });
+      ticking = true;
     }
   });
 }
 
 /* ------------------------------------------
-   3. Mobile Navigation Drawer Toggle
+   3. Mobile Navigation Drawer Toggle (48x48px Touch Target & ARIA)
    ------------------------------------------ */
 function initMobileMenu() {
   const toggleBtn = document.getElementById('mobile-menu-toggle');
@@ -156,12 +184,15 @@ function initMobileMenu() {
 
   if (!toggleBtn || !navLinks) return;
 
-  toggleBtn.addEventListener('click', () => {
+  function toggleMenu(e) {
+    if (e) e.preventDefault();
     navLinks.classList.toggle('mobile-open');
     const isOpen = navLinks.classList.contains('mobile-open');
-    toggleBtn.setAttribute('aria-expanded', isOpen);
+    toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     toggleBtn.innerHTML = isOpen ? '✕' : '☰';
-  });
+  }
+
+  toggleBtn.addEventListener('click', toggleMenu);
 
   navLinks.querySelectorAll('.nav-link, .btn').forEach(link => {
     link.addEventListener('click', () => {
@@ -190,11 +221,11 @@ function initServiceTabs() {
         const category = card.getAttribute('data-category');
         if (filter === 'all' || category === filter) {
           card.style.display = 'flex';
-          setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 50);
+          setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }, 30);
         } else {
           card.style.opacity = '0';
           card.style.transform = 'translateY(10px)';
-          setTimeout(() => { card.style.display = 'none'; }, 200);
+          setTimeout(() => { card.style.display = 'none'; }, 180);
         }
       });
     });
@@ -256,10 +287,15 @@ function initFaqAccordion() {
     if (!btn) return;
     btn.addEventListener('click', () => {
       const isActive = item.classList.contains('active');
-      faqItems.forEach(i => i.classList.remove('active'));
+      faqItems.forEach(i => {
+        i.classList.remove('active');
+        const qBtn = i.querySelector('.faq-question-btn');
+        if (qBtn) qBtn.setAttribute('aria-expanded', 'false');
+      });
 
       if (!isActive) {
         item.classList.add('active');
+        btn.setAttribute('aria-expanded', 'true');
       }
     });
   });
@@ -269,8 +305,8 @@ function initFaqAccordion() {
       const term = e.target.value.toLowerCase().trim();
 
       faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question-btn').textContent.toLowerCase();
-        const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+        const question = item.querySelector('.faq-question-btn')?.textContent.toLowerCase() || '';
+        const answer = item.querySelector('.faq-answer')?.textContent.toLowerCase() || '';
 
         if (question.includes(term) || answer.includes(term)) {
           item.style.display = 'block';
@@ -310,7 +346,6 @@ function initContactForm() {
     const originalText = submitBtn ? submitBtn.innerHTML : '';
     if (submitBtn) submitBtn.innerHTML = 'Sending Email... ⌛';
 
-    // Dispatch Email Payload to info@corvaprime.com via FormSubmit endpoint
     try {
       await fetch('https://formsubmit.co/ajax/info@corvaprime.com', {
         method: 'POST',
@@ -328,13 +363,14 @@ function initContactForm() {
         })
       });
     } catch (err) {
-      console.log('Email dispatched with fallback:', err);
+      console.log('Contact form dispatched with fallback:', err);
     }
 
     if (submitBtn) submitBtn.innerHTML = originalText;
 
     if (modal) {
       modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
     }
 
     form.reset();
@@ -343,11 +379,13 @@ function initContactForm() {
   if (closeModalBtn && modal) {
     closeModalBtn.addEventListener('click', () => {
       modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
     });
 
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
         modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
       }
     });
   }
@@ -381,7 +419,6 @@ function initAuditForm() {
     const originalText = submitBtn ? submitBtn.innerHTML : '';
     if (submitBtn) submitBtn.innerHTML = 'Sending Application to info@corvaprime.com... ⌛';
 
-    // Send Payload directly to info@corvaprime.com
     try {
       await fetch('https://formsubmit.co/ajax/info@corvaprime.com', {
         method: 'POST',
@@ -407,6 +444,7 @@ function initAuditForm() {
 
     if (modal) {
       modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
     }
 
     form.reset();
@@ -415,18 +453,34 @@ function initAuditForm() {
   if (closeModalBtn && modal) {
     closeModalBtn.addEventListener('click', () => {
       modal.classList.remove('active');
+      modal.setAttribute('aria-hidden', 'true');
     });
 
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
         modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
       }
     });
   }
 }
 
 /* ------------------------------------------
-   9. Smooth Scroll for Anchor Links
+   9. Image Error Handling & Defensive Fallbacks
+   ------------------------------------------ */
+function initImageFallbacks() {
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', () => {
+      console.warn(`Asset failed to load: ${img.src}`);
+      if (img.classList.contains('brand-logo-img') || img.classList.contains('preloader-logo')) {
+        img.src = 'assets/corva-prime-logo.png';
+      }
+    });
+  });
+}
+
+/* ------------------------------------------
+   10. Smooth Scroll for Anchor Links
    ------------------------------------------ */
 function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
