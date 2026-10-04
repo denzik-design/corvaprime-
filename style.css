@@ -347,14 +347,14 @@ body {
 }
 
 .brand-logo-img {
-  height: 42px;
-  width: auto;
+  height: 44px;
+  width: 44px;
   object-fit: contain;
   transition: transform var(--transition-fast);
 }
 
 .brand-logo-link:hover .brand-logo-img {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .brand-name {
