@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAuditForm();
   initSmoothScroll();
   initImageFallbacks();
+  initFloatingContactWidget();
 });
 
 /* ------------------------------------------
@@ -501,4 +502,56 @@ function initSmoothScroll() {
       }
     });
   });
+}
+
+/* ------------------------------------------
+   11. Floating Contact Action & WhatsApp Selector Modal
+   ------------------------------------------ */
+function initFloatingContactWidget() {
+  const waTrigger = document.getElementById('floating-whatsapp-trigger');
+  const waPopover = document.getElementById('whatsapp-selector-popover');
+  const waClose = document.getElementById('wa-popover-close');
+  const emailTrigger = document.getElementById('floating-email-trigger');
+
+  // WhatsApp Selector Modal Toggle
+  if (waTrigger && waPopover) {
+    waTrigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      waPopover.classList.toggle('active');
+      waPopover.setAttribute('aria-hidden', waPopover.classList.contains('active') ? 'false' : 'true');
+    });
+  }
+
+  if (waClose && waPopover) {
+    waClose.addEventListener('click', () => {
+      waPopover.classList.remove('active');
+      waPopover.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  if (waPopover) {
+    waPopover.addEventListener('click', (e) => {
+      if (e.target === waPopover) {
+        waPopover.classList.remove('active');
+        waPopover.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    waPopover.querySelectorAll('.wa-option-card').forEach(card => {
+      card.addEventListener('click', () => {
+        waPopover.classList.remove('active');
+        waPopover.setAttribute('aria-hidden', 'true');
+      });
+    });
+  }
+
+  // Email Button Guarantee Fix
+  if (emailTrigger) {
+    emailTrigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      // Direct Mailto Dispatch
+      window.location.href = 'mailto:info@corvaprime.com';
+    });
+  }
 }
