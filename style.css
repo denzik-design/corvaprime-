@@ -342,18 +342,38 @@ body {
 .brand-logo-link {
   display: flex;
   align-items: center;
+  gap: 0.65rem;
   text-decoration: none;
 }
 
 .brand-logo-img {
-  height: 46px;
+  height: 42px;
   width: auto;
   object-fit: contain;
   transition: transform var(--transition-fast);
 }
 
-.brand-logo-img:hover {
-  transform: scale(1.02);
+.brand-logo-link:hover .brand-logo-img {
+  transform: scale(1.04);
+}
+
+.brand-name {
+  font-size: clamp(1.2rem, 3.8vw, 1.45rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--blue-royal);
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.brand-name-gold {
+  color: var(--gold-primary);
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 1px;
 }
 
 .nav-links {
