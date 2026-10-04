@@ -98,7 +98,7 @@ function initBackgroundCanvas() {
   function animate() {
     ctx.clearRect(0, 0, width, height);
 
-    ctx.strokeStyle = 'rgba(56, 189, 248, 0.03)';
+    ctx.strokeStyle = 'rgba(217, 119, 6, 0.04)';
     ctx.lineWidth = 1;
     const gridSize = 60;
     for (let x = 0; x < width; x += gridSize) {
@@ -122,7 +122,7 @@ function initBackgroundCanvas() {
 
         if (dist < 130) {
           ctx.beginPath();
-          ctx.strokeStyle = `rgba(6, 182, 212, ${0.12 * (1 - dist / 130)})`;
+          ctx.strokeStyle = `rgba(217, 119, 6, ${0.15 * (1 - dist / 130)})`;
           ctx.lineWidth = 0.8;
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
@@ -131,7 +131,7 @@ function initBackgroundCanvas() {
       }
     }
 
-    particles.forEach(p => {
+    particles.forEach((p, idx) => {
       p.x += p.vx;
       p.y += p.vy;
 
@@ -140,9 +140,12 @@ function initBackgroundCanvas() {
       if (p.y < 0) p.y = height;
       if (p.y > height) p.y = 0;
 
+      const isGold = idx % 2 === 0;
+      const colorStr = isGold ? `rgba(217, 119, 6, ${p.alpha * 0.8})` : `rgba(30, 58, 138, ${p.alpha * 0.8})`;
+
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+      ctx.fillStyle = colorStr;
       ctx.fill();
     });
 
