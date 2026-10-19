@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redeem Your Voucher | Corva Prime</title>
+  <meta name="description" content="Redeem your exclusive Corva Prime voucher. Enter your details and voucher code to claim your offer — our team will verify and respond within 24 hours.">
+
+  <!-- Brand Logo Favicon -->
+  <link rel="icon" type="image/png" href="assets/corva-prime-logo.png">
+  <link rel="apple-touch-icon" href="assets/corva-prime-logo.png">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- No external SDK needed — Web3Forms API used directly -->
+
+  <style>
+    /* ─────────────────────────────────────────
+       Voucher Redeem Page — Custom Styles
+    ───────────────────────────────────────── */
+
+    /* Ticket / card container */
+    .voucher-section {
+      padding: 3rem 0 5rem;
+    }
+
+    .voucher-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 3rem;
+      align-items: start;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .voucher-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    /* Left info panel */
+    .voucher-info-panel {
+      position: sticky;
+      top: 100px;
+    }
+
+    .voucher-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .voucher-icon-circle {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(196, 160, 80, 0.35);
+    }
+
+    .voucher-info-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .voucher-info-subtitle {
+      color: var(--gold);
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .voucher-info-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 2rem;
+    }
+
+    .voucher-steps {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .voucher-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.85rem;
+      padding: 1rem 1.1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      transition: border-color 0.3s;
+    }
+
+    .voucher-step:hover {
+      border-color: var(--gold);
+    }
+
+    .step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--dark-bg);
+      flex-shrink: 0;
+    }
+
+    .step-text {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .step-text strong {
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    /* Right — Form Card */
+    .voucher-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .voucher-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+    }
+
+    /* Dashed tear line */
+    .voucher-tear-line {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 1.75rem 0;
+    }
+
+    .voucher-tear-line::before,
+    .voucher-tear-line::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      border-top: 2px dashed var(--border-color);
+    }
+
+    .voucher-tear-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Voucher code field — special styling */
+    .voucher-code-field {
+      position: relative;
+    }
+
+    .voucher-code-field .form-input {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(196,160,80,0.06), rgba(196,160,80,0.02));
+      border-color: var(--gold);
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .voucher-code-field .form-input::placeholder {
+      color: rgba(196,160,80,0.35);
+      letter-spacing: 3px;
+      font-size: 1rem;
+    }
+
+    .voucher-code-field .form-input:focus {
+      box-shadow: 0 0 0 3px rgba(196,160,80,0.2);
+    }
+
+    /* Submit button with glow */
+    .btn-voucher-submit {
+      width: 100%;
+      padding: 1.1rem 2rem;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: var(--dark-bg);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-voucher-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(196,160,80,0.4);
+    }
+
+    .btn-voucher-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-voucher-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Spinner */
+    .btn-spinner {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(0,0,0,0.2);
+      border-top-color: var(--dark-bg);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Privacy note */
+    .voucher-privacy-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.9rem 1rem;
+      background: rgba(196,160,80,0.05);
+      border: 1px solid rgba(196,160,80,0.15);
+      border-radius: 10px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+
+    .voucher-privacy-note .lock-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* Success / Error state */
+    .voucher-success-panel,
+    .voucher-error-panel {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1.5rem;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .voucher-success-panel.active,
+    .voucher-error-panel.active {
+      display: block;
+    }
+
+    .success-checkmark {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 0 30px rgba(34,197,94,0.35);
+    }
+
+    .error-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 1.5rem;
+      box-shadow: 0 0 30px rgba(239,68,68,0.35);
+    }
+
+    .voucher-success-panel h3,
+    .voucher-error-panel h3 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .voucher-success-panel p,
+    .voucher-error-panel p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Reference number box */
+    .ref-number-box {
+      background: rgba(196,160,80,0.08);
+      border: 1px dashed var(--gold);
+      border-radius: 10px;
+      padding: 0.75rem 1.25rem;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2px;
+      margin: 0 auto 1.5rem;
+      display: inline-block;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Form section heading */
+    .voucher-form-heading {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+
+    .voucher-form-subheading {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    /* Form two-column grid for name+company */
+    .form-row-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .form-row-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Preloader -->
+  <div id="preloader" class="preloader-overlay">
+    <div class="preloader-content">
+      <img src="assets/corva-prime-logo.png" alt="Corva Prime Loading..." class="preloader-logo" width="220" height="54">
+      <div class="preloader-bar">
+        <div class="preloader-progress" id="preloader-progress"></div>
+      </div>
+      <div class="preloader-text">INITIALIZING ECOSYSTEM...</div>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+
+    <!-- Header Navigation -->
+    <header class="header" id="header">
+      <div class="container nav-container">
+        <a href="/" class="brand-logo-link" aria-label="Corva Prime Home">
+          <img src="assets/corva-prime-logo.png" alt="Corva Prime Logo" class="brand-logo-img" width="42" height="42" fetchpriority="high">
+          <span class="brand-name">Corva<span class="brand-name-gold">Prime</span></span>
+        </a>
+        <nav>
+          <ul class="nav-links" id="nav-links">
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="digital-growth" class="nav-link">Digital Growth</a></li>
+            <li><a href="intelligent-automation" class="nav-link">Automation</a></li>
+            <li><a href="powerful-websites" class="nav-link">Websites</a></li>
+            <li><a href="founder-message" class="nav-link">Founder</a></li>
+            <li><a href="roi-calculator" class="nav-link">ROI Calculator</a></li>
+            <li><a href="case-studies" class="nav-link">Case Studies</a></li>
+            <li><a href="faq" class="nav-link">FAQ</a></li>
+            <li><a href="free-audit" class="nav-link">Free Audit</a></li>
+            <li><a href="voucher-redeem" class="nav-link active" style="color: var(--gold);">Redeem Voucher</a></li>
+            <li><a href="contact" class="btn btn-primary" style="padding: 0.55rem 1.25rem; font-size: 0.88rem;">Contact Us</a></li>
+          </ul>
+        </nav>
+        <div style="display: flex; align-items: center; gap: 0.65rem;">
+          <button type="button" id="theme-toggle" class="theme-toggle-btn" aria-label="Switch to dark mode">
+            <span class="theme-icon">🌙</span>
+          </button>
+          <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+            <span class="hamburger-bar"></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Page Banner -->
+      <section class="page-banner">
+        <div class="container">
+          <div class="badge">Exclusive Offer</div>
+          <h1 class="page-title text-gradient">Redeem Your Voucher</h1>
+          <p class="page-subtitle">Enter your details below to claim your exclusive Corva Prime offer. Our team will verify your voucher and respond within 24 hours.</p>
+        </div>
+      </section>
+
+      <!-- Voucher Section -->
+      <section class="voucher-section">
+        <div class="container">
+          <div class="voucher-wrapper">
+
+            <!-- Left: Info Panel -->
+            <div class="voucher-info-panel">
+              <div class="voucher-badge-row">
+                <div class="voucher-icon-circle">🎟️</div>
+                <div>
+                  <div class="voucher-info-subtitle">Voucher Redemption</div>
+                  <div class="voucher-info-title">How It Works</div>
+                </div>
+              </div>
+              <p class="voucher-info-desc">
+                Submit your voucher details using the form. Our team at Corva Prime will review your submission and send you an acceptance or rejection notification promptly.
+              </p>
+
+              <ul class="voucher-steps">
+                <li class="voucher-step">
+                  <div class="step-num">1</div>
+                  <div class="step-text">
+                    <strong>Fill in your details</strong>
+                    Enter your name, company, email, WhatsApp, and voucher code.
+                  </div>
+                </li>
+                <li class="voucher-step">
+                  <div class="step-num">2</div>
+                  <div class="step-text">
+                    <strong>We verify your voucher</strong>
+                    Muneeb Ahmad Butt personally reviews each submission for authenticity.
+                  </div>
+                </li>
+                <li class="voucher-step">
+                  <div class="step-num">3</div>
+                  <div class="step-text">
+                    <strong>Get your response</strong>
+                    You'll receive an acceptance or rejection email within 24 hours.
+                  </div>
+                </li>
+                <li class="voucher-step">
+                  <div class="step-num">4</div>
+                  <div class="step-text">
+                    <strong>Claim your benefit</strong>
+                    Upon acceptance, we'll schedule your onboarding call immediately.
+                  </div>
+                </li>
+              </ul>
+
+              <div style="margin-top: 2rem; padding: 1.25rem; background: rgba(196,160,80,0.06); border: 1px solid rgba(196,160,80,0.2); border-radius: 14px;">
+                <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0; line-height: 1.6;">
+                  <strong style="color: var(--gold);">Need help?</strong><br>
+                  Contact us at <a href="mailto:info@corvaprime.com" style="color: var(--gold);">info@corvaprime.com</a> or use the floating WhatsApp button below.
+                </p>
+              </div>
+            </div>
+
+            <!-- Right: Voucher Form Card -->
+            <div class="voucher-card">
+
+              <!-- Form State -->
+              <div id="voucher-form-section">
+                <div class="voucher-form-heading">🎟️ Voucher Redemption Form</div>
+                <div class="voucher-form-subheading">All fields are required. Your data is kept strictly confidential.</div>
+
+                <form id="voucher-redeem-form" novalidate>
+
+                  <!-- Name + Company -->
+                  <div class="form-row-2col">
+                    <div class="form-group">
+                      <label for="v-name" class="form-label">Full Name *</label>
+                      <input
+                        type="text"
+                        id="v-name"
+                        name="customer_name"
+                        class="form-input"
+                        placeholder="Muhammad Ali"
+                        required
+                        autocomplete="name"
+                      >
+                    </div>
+                    <div class="form-group">
+                      <label for="v-company" class="form-label">Company Name *</label>
+                      <input
+                        type="text"
+                        id="v-company"
+                        name="company_name"
+                        class="form-input"
+                        placeholder="Acme Corp"
+                        required
+                        autocomplete="organization"
+                      >
+                    </div>
+                  </div>
+
+                  <!-- Email -->
+                  <div class="form-group">
+                    <label for="v-email" class="form-label">Email Address *</label>
+                    <input
+                      type="email"
+                      id="v-email"
+                      name="customer_email"
+                      class="form-input"
+                      placeholder="you@company.com"
+                      required
+                      autocomplete="email"
+                    >
+                  </div>
+
+                  <!-- WhatsApp -->
+                  <div class="form-group">
+                    <label for="v-whatsapp" class="form-label">WhatsApp Number *</label>
+                    <input
+                      type="tel"
+                      id="v-whatsapp"
+                      name="whatsapp_number"
+                      class="form-input"
+                      placeholder="+92 300 1234567"
+                      required
+                      autocomplete="tel"
+                    >
+                  </div>
+
+                  <!-- Tear line separator -->
+                  <div class="voucher-tear-line">
+                    <span class="voucher-tear-icon">✂️</span>
+                  </div>
+
+                  <!-- Voucher Code -->
+                  <div class="form-group voucher-code-field">
+                    <label for="v-code" class="form-label" style="color: var(--gold); font-weight: 700;">Voucher Code *</label>
+                    <input
+                      type="text"
+                      id="v-code"
+                      name="voucher_code"
+                      class="form-input"
+                      placeholder="CP-XXXX-XXXX"
+                      required
+                      autocomplete="off"
+                      maxlength="32"
+                    >
+                  </div>
+
+                  <!-- Submit Button -->
+                  <button type="submit" class="btn-voucher-submit" id="voucher-submit-btn">
+                    Submit Voucher Redemption 🚀
+                  </button>
+
+                  <!-- Privacy Note -->
+                  <div class="voucher-privacy-note">
+                    <span class="lock-icon">🔒</span>
+                    <span>Your information is never shared or sold. It is only used to verify and process your voucher redemption with Corva Prime.</span>
+                  </div>
+
+                </form>
+              </div>
+
+              <!-- Success State -->
+              <div class="voucher-success-panel" id="voucher-success">
+                <div class="success-checkmark">✓</div>
+                <h3 class="text-gradient">Voucher Submitted!</h3>
+                <p>
+                  Your voucher redemption request has been sent to the Corva Prime team. Muneeb Ahmad Butt will personally review your submission and you'll receive an <strong>Accept</strong> or <strong>Reject</strong> notification within 24 hours.
+                </p>
+                <div class="ref-number-box" id="ref-number-display">CP-REF-XXXXXX</div>
+                <p style="font-size: 0.82rem; color: var(--text-muted);">
+                  Keep this reference number. You may need it if you contact us regarding this submission.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 1rem;">
+                  <a href="/" class="btn btn-secondary">Back to Home</a>
+                  <button type="button" class="btn btn-primary" onclick="resetVoucherForm()">Submit Another</button>
+                </div>
+              </div>
+
+              <!-- Error State -->
+              <div class="voucher-error-panel" id="voucher-error">
+                <div class="error-icon">✗</div>
+                <h3>Submission Failed</h3>
+                <p id="voucher-error-message">
+                  We couldn't send your voucher request. Please check your internet connection and try again.
+                </p>
+                <button type="button" class="btn btn-primary" onclick="showVoucherForm()">Try Again</button>
+              </div>
+
+            </div><!-- end voucher-card -->
+          </div><!-- end voucher-wrapper -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <a href="/" class="brand-logo-link">
+              <img src="assets/corva-prime-logo.png" alt="Corva Prime Logo" class="brand-logo-img" width="180" height="44" loading="lazy">
+            </a>
+            <p class="footer-brand-desc">Digital Growth, Intelligent Automation &amp; Powerful Websites.</p>
+          </div>
+          <div>
+            <h4 class="footer-title">Pillars</h4>
+            <ul class="footer-links">
+              <li><a href="digital-growth" class="footer-link">Digital Growth</a></li>
+              <li><a href="intelligent-automation" class="footer-link">Automation</a></li>
+              <li><a href="powerful-websites" class="footer-link">Websites</a></li>
+              <li><a href="free-audit" class="footer-link">Free Audit</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="footer-title">Company</h4>
+            <ul class="footer-links">
+              <li><a href="founder-message" class="footer-link">Founder's Message</a></li>
+              <li><a href="case-studies" class="footer-link">Case Studies</a></li>
+              <li><a href="faq" class="footer-link">FAQ</a></li>
+              <li><a href="voucher-redeem" class="footer-link">Redeem Voucher</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="footer-title">Direct Contact</h4>
+            <ul class="footer-links">
+              <li><a href="mailto:info@corvaprime.com" class="footer-link">✉️ info@corvaprime.com</a></li>
+              <li><a href="contact" class="footer-link">📍 Contact Hub</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div>© 2026 Corva Prime. Founder: Muneeb Ahmad Butt. All rights reserved.</div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Floating Contact Action Widget -->
+    <div class="floating-contact-widget">
+      <a href="mailto:info@corvaprime.com" id="floating-email-trigger" class="floating-btn floating-email-btn" aria-label="Send Email to Corva Prime">
+        <svg class="floating-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <span class="floating-btn-label">Email Us</span>
+      </a>
+      <button type="button" id="floating-whatsapp-trigger" class="floating-btn floating-whatsapp-btn" aria-label="Open WhatsApp Support Options">
+        <svg class="floating-btn-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.522 0-9.999 4.477-9.999 9.999 0 1.764.459 3.483 1.332 5.006l-1.364 4.986 5.106-1.339c1.465.799 3.118 1.22 4.797 1.22 5.522 0 10.001-4.477 10.001-9.999s-4.479-9.999-10.001-9.999zm5.836 14.161c-.244.688-1.218 1.313-1.974 1.48-.518.113-1.196.204-3.469-.738-2.909-1.205-4.783-4.175-4.927-4.368-.144-.193-1.178-1.571-1.178-2.997 0-1.426.747-2.129 1.012-2.417.265-.288.577-.36.77-.36.193 0 .385.002.553.01.18.008.422-.069.66.505.244.589.83 2.029.902 2.173.072.144.12.313.024.505-.096.193-.144.313-.288.481-.144.168-.303.375-.433.505-.144.144-.294.302-.126.589.168.288.748 1.233 1.603 1.996 1.101.98 2.03 1.285 2.318 1.429.288.144.457.12.625-.072.168-.193.722-.841.914-1.129.193-.288.385-.24.649-.144.265.096 1.683.793 1.972.937.288.144.481.216.553.336.072.12.072.696-.172 1.384z"/></svg>
+        <span class="floating-btn-label">WhatsApp</span>
+      </button>
+    </div>
+
+    <!-- WhatsApp Team Selector Popover -->
+    <div id="whatsapp-selector-popover" class="wa-popover-overlay" aria-hidden="true">
+      <div class="wa-popover-card">
+        <div class="wa-popover-header">
+          <div class="wa-popover-title">
+            <span class="wa-icon-badge">💬</span>
+            <div>
+              <h3>Connect on WhatsApp</h3>
+              <p>Select your preferred team</p>
+            </div>
+          </div>
+          <button type="button" id="wa-popover-close" class="wa-close-btn" aria-label="Close options">✕</button>
+        </div>
+        <div class="wa-options-list">
+          <a href="https://wa.me/923104091688" target="_blank" rel="noopener" class="wa-option-card">
+            <span class="wa-option-flag">🇵🇰</span>
+            <div class="wa-option-info">
+              <span class="wa-option-role">Customer Support (PK)</span>
+              <span class="wa-option-num">+92 310 4091688</span>
+            </div>
+            <span class="wa-option-arrow">↗</span>
+          </a>
+          <a href="https://wa.me/971561776065" target="_blank" rel="noopener" class="wa-option-card">
+            <span class="wa-option-flag">🇦🇪</span>
+            <div class="wa-option-info">
+              <span class="wa-option-role">UAE / Middle East</span>
+              <span class="wa-option-num">+971 56 177 6065</span>
+            </div>
+            <span class="wa-option-arrow">↗</span>
+          </a>
+          <a href="https://wa.me/447575497312" target="_blank" rel="noopener" class="wa-option-card">
+            <span class="wa-option-flag">🇬🇧</span>
+            <div class="wa-option-info">
+              <span class="wa-option-role">IT &amp; Technical Team (UK)</span>
+              <span class="wa-option-num">+44 7575 497312</span>
+            </div>
+            <span class="wa-option-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end content-wrapper -->
+
+  <script type="module" src="main.js"></script>
+
+  <script>
+    /* ─────────────────────────────────────────────────────────────────
+       Corva Prime — Voucher Redemption Form
+       Powered by Web3Forms (https://web3forms.com)
+
+       HOW TO ACTIVATE (one-time, completely free, no account needed):
+       1. Go to https://web3forms.com
+       2. Enter your email: info@corvaprime.com and click "Create Access Key"
+       3. Check your inbox for the Access Key (looks like: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx)
+       4. Paste it into the WEB3FORMS_ACCESS_KEY variable below.
+       That's it — no account, no login, no template setup required!
+    ───────────────────────────────────────────────────────────────────
+    */
+
+    // ── PASTE YOUR WEB3FORMS ACCESS KEY HERE ──────────────────────────
+    const WEB3FORMS_ACCESS_KEY = 'YOUR_WEB3FORMS_ACCESS_KEY';
+    // ──────────────────────────────────────────────────────────────────
+
+    // Generate a short reference number  e.g. CP-A3KX9F
+    function generateRef() {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let ref = 'CP-';
+      for (let i = 0; i < 6; i++) {
+        ref += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return ref;
+    }
+
+    // Build a mailto: accept/reject pre-filled link for email buttons
+    function buildMailtoLink(type, data) {
+      const accepted = type === 'ACCEPTED';
+      const subject = encodeURIComponent(
+        `Voucher ${accepted ? 'ACCEPTED ✅' : 'REJECTED ❌'} — ${data.voucher_code} (Ref: ${data.ref_number})`
+      );
+      const body = encodeURIComponent(
+        `Dear ${data.customer_name},\n\n` +
+        `We have reviewed your Corva Prime voucher redemption request.\n\n` +
+        (accepted
+          ? `🎉 Great news! Your voucher code ${data.voucher_code} has been ACCEPTED.\n\nOur team will contact you within 24 hours to schedule your onboarding call.\n\nWelcome to Corva Prime — we're excited to work with you!`
+          : `We regret to inform you that your voucher code "${data.voucher_code}" could not be verified or has already been used.\n\nIf you believe this is an error, please reply to this email or contact us at info@corvaprime.com.`) +
+        `\n\n—\nMuneeb Ahmad Butt\nFounder & CEO, Corva Prime\ninfo@corvaprime.com | corvaprime.com`
+      );
+      return `mailto:${data.customer_email}?subject=${subject}&body=${body}`;
+    }
+
+    // Form submission
+    document.getElementById('voucher-redeem-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const submitBtn = document.getElementById('voucher-submit-btn');
+      const refNumber = generateRef();
+      const now = new Date().toLocaleString('en-PK', {
+        timeZone: 'Asia/Karachi',
+        dateStyle: 'long',
+        timeStyle: 'short'
+      });
+
+      const data = {
+        customer_name:   document.getElementById('v-name').value.trim(),
+        company_name:    document.getElementById('v-company').value.trim(),
+        customer_email:  document.getElementById('v-email').value.trim(),
+        whatsapp_number: document.getElementById('v-whatsapp').value.trim(),
+        voucher_code:    document.getElementById('v-code').value.trim().toUpperCase(),
+        ref_number:      refNumber,
+        submission_time: now
+      };
+
+      // Validation
+      if (!data.customer_name || !data.company_name || !data.customer_email || !data.whatsapp_number || !data.voucher_code) {
+        alert('Please fill in all required fields before submitting.');
+        return;
+      }
+
+      // Show loading
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="btn-spinner"></span>Sending...';
+
+      try {
+        if (WEB3FORMS_ACCESS_KEY === 'YOUR_WEB3FORMS_ACCESS_KEY') {
+          // ── DEMO MODE: Access key not yet set — simulate success ──
+          await new Promise(r => setTimeout(r, 1600));
+          showVoucherSuccess(refNumber);
+          console.info(
+            '[Corva Prime] Web3Forms not yet configured.\n' +
+            'Visit https://web3forms.com, enter info@corvaprime.com, get the Access Key, and paste it into WEB3FORMS_ACCESS_KEY.'
+          );
+        } else {
+          // ── LIVE MODE: Send via Web3Forms ──
+          const acceptLink = buildMailtoLink('ACCEPTED', data);
+          const rejectLink = buildMailtoLink('REJECTED', data);
+
+          const emailBody =
+            `🎟️ NEW VOUCHER REDEMPTION REQUEST\n` +
+            `${'─'.repeat(48)}\n\n` +
+            `👤 Name:          ${data.customer_name}\n` +
+            `🏢 Company:       ${data.company_name}\n` +
+            `📧 Email:         ${data.customer_email}\n` +
+            `📱 WhatsApp:      ${data.whatsapp_number}\n` +
+            `🎟️  Voucher Code:  ${data.voucher_code}\n` +
+            `📋 Reference:     ${data.ref_number}\n` +
+            `🕐 Submitted:     ${data.submission_time}\n\n` +
+            `${'─'.repeat(48)}\n\n` +
+            `✅ TO ACCEPT — click & send this pre-filled email:\n${acceptLink}\n\n` +
+            `❌ TO REJECT — click & send this pre-filled email:\n${rejectLink}\n\n` +
+            `${'─'.repeat(48)}\n` +
+            `Sent automatically from corvaprime.com/voucher-redeem`;
+
+          const payload = {
+            access_key:   WEB3FORMS_ACCESS_KEY,
+            subject:      `🎟️ Voucher Redemption: ${data.voucher_code} | Ref: ${data.ref_number}`,
+            from_name:    'Corva Prime Voucher System',
+            replyto:      data.customer_email,
+            message:      emailBody,
+            // Also pass individual fields for Web3Forms table view
+            'Full Name':    data.customer_name,
+            'Company':      data.company_name,
+            'Email':        data.customer_email,
+            'WhatsApp':     data.whatsapp_number,
+            'Voucher Code': data.voucher_code,
+            'Reference':    data.ref_number,
+            'Submitted At': data.submission_time
+          };
+
+          const res = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          const result = await res.json();
+          if (result.success) {
+            showVoucherSuccess(refNumber);
+          } else {
+            throw new Error(result.message || 'Submission failed');
+          }
+        }
+      } catch (err) {
+        console.error('[Corva Prime] Voucher submission error:', err);
+        document.getElementById('voucher-error-message').textContent =
+          'We couldn\'t send your request right now. Please try again or email us directly at info@corvaprime.com';
+        showVoucherError();
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Voucher Redemption 🚀';
+      }
+    });
+
+    function showVoucherSuccess(ref) {
+      document.getElementById('ref-number-display').textContent = ref;
+      document.getElementById('voucher-form-section').style.display = 'none';
+      document.getElementById('voucher-error').classList.remove('active');
+      document.getElementById('voucher-success').classList.add('active');
+    }
+
+    function showVoucherError() {
+      document.getElementById('voucher-form-section').style.display = 'none';
+      document.getElementById('voucher-success').classList.remove('active');
+      document.getElementById('voucher-error').classList.add('active');
+    }
+
+    function showVoucherForm() {
+      document.getElementById('voucher-form-section').style.display = 'block';
+      document.getElementById('voucher-success').classList.remove('active');
+      document.getElementById('voucher-error').classList.remove('active');
+    }
+
+    function resetVoucherForm() {
+      document.getElementById('voucher-redeem-form').reset();
+      showVoucherForm();
+    }
+
+    // Auto-uppercase voucher code as user types
+    document.getElementById('v-code').addEventListener('input', function() {
+      const pos = this.selectionStart;
+      this.value = this.value.toUpperCase();
+      this.setSelectionRange(pos, pos);
+    });
+  </script>
+
+</body>
+</html>

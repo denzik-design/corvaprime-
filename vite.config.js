@@ -23,7 +23,8 @@ export default defineConfig({
         faq: resolve(__dirname, 'faq.html'),
         freeAudit: resolve(__dirname, 'free-audit.html'),
         contact: resolve(__dirname, 'contact.html'),
-        privacy: resolve(__dirname, 'privacy.html')
+        privacy: resolve(__dirname, 'privacy.html'),
+        voucherRedeem: resolve(__dirname, 'voucher-redeem.html')
       }
     }
   }
